@@ -52,7 +52,7 @@ export default function Map() {
   };
 
   return (
-    <MapContainer center={center} zoom={12} className="h-screen w-full z-0">
+    <MapContainer center={center} zoom={18} className="h-screen w-full z-0">
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&copy; OpenStreetMap contributors"
