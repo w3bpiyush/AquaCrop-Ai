@@ -8,7 +8,7 @@ const urbanist = Urbanist({
 });
 
 export const metadata = {
-  title: "Ai based farming assistant",
+  title: "Water Wise",
   description: "A Next.js app for managing farm tasks with AI assistance",
 };
 
