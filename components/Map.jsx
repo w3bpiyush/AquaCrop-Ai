@@ -23,21 +23,10 @@ export default function Map() {
 
   const handleCreated = (e) => {
     const latlngs = e.layer.getLatLngs();
-    console.log("Created:", latlngs);
+    console.log("Coordinates:", latlngs);
     setEnabled(false);
   };
 
-  const handleEdited = (e) => {
-    const latlngs = e.layer.getLatLngs();
-    console.log("Edited:", latlngs);
-    setEnabled(false);
-  };
-
-  const handleDeleted = (e) => {
-    const latlngs = e.layer.getLatLngs();
-    console.log("Deleted:", latlngs);
-    setEnabled(false);
-  };
 
   return (
     <MapContainer center={center} zoom={13} className="h-screen w-full z-0">
@@ -59,8 +48,6 @@ export default function Map() {
           }}
           edit={{ edit: true, remove: true }}
           onCreated={handleCreated}
-          onEdited={handleEdited}
-          onDeleted={handleDeleted}
         />
       </FeatureGroup>
     </MapContainer>
