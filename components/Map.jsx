@@ -21,38 +21,26 @@ const MapUpdater = ({ center }) => {
 export default function Map() {
   const { enabled, setEnabled, center } = useDraw();
 
-  const extractCoordinates = (layer) => {
-    const latlngs = layer.getLatLngs();
-    const ring = Array.isArray(latlngs[0]) ? latlngs[0] : latlngs;
-    return ring.map(({ lat, lng }) => ({ lat, lng }));
-  };
-
   const handleCreated = (e) => {
-    const coords = extractCoordinates(e.layer);
-    console.log("Created:", coords);
+    const latlngs = e.layer.getLatLngs();
+    console.log("Created:", latlngs);
     setEnabled(false);
   };
 
   const handleEdited = (e) => {
-    const allCoords = [];
-    e.layers.eachLayer((layer) => {
-      const coords = extractCoordinates(layer);
-      allCoords.push(coords);
-    });
-    console.log("Edited:", allCoords);
+    const latlngs = e.layer.getLatLngs();
+    console.log("Edited:", latlngs);
+    setEnabled(false);
   };
 
   const handleDeleted = (e) => {
-    const allCoords = [];
-    e.layers.eachLayer((layer) => {
-      const coords = extractCoordinates(layer);
-      allCoords.push(coords);
-    });
-    console.log("Deleted:", allCoords);
+    const latlngs = e.layer.getLatLngs();
+    console.log("Deleted:", latlngs);
+    setEnabled(false);
   };
 
   return (
-    <MapContainer center={center} zoom={18} className="h-screen w-full z-0">
+    <MapContainer center={center} zoom={13} className="h-screen w-full z-0">
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&copy; OpenStreetMap contributors"
