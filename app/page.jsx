@@ -1,5 +1,4 @@
 "use client";
-
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { DrawProvider, useDraw } from "../context/DrawContext";
@@ -37,7 +36,7 @@ const DrawFarmButton = () => {
     }
 
     setShowModal(false);
-    setTriggerDraw(true); // triggers polygon draw mode on map
+    setTriggerDraw(true); 
 
     console.log("Crop Info:", { cropType, growthStage, irrigationType, waterFlow: flow });
 
