@@ -221,6 +221,22 @@ const GetFarmButton = () => {
   );
 };
 
+const GetWaterUsagesButton = () => {
+
+  const [showWaterModel, setWaterShowModal] = useState(false);
+
+    return (
+    <>
+      <button
+        onClick={() => setWaterShowModal(true)}
+        className="bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition"
+      >
+        Get Water Usages
+      </button>
+    </>
+  );    
+}
+
 const AskAiButton = () => {
 
   const [showAiModal, setAiShowModal] = useState(false);
@@ -246,6 +262,7 @@ export default function HomePage() {
         <div className="fixed bottom-4 left-4 z-[1000] flex space-x-4">
           <DrawFarmButton />
           <GetFarmButton />
+          <GetWaterUsagesButton />
           <AskAiButton />
         </div>
       </main>
