@@ -221,6 +221,23 @@ const GetFarmButton = () => {
   );
 };
 
+const AskAiButton = () => {
+
+  const [showAiModal, setAiShowModal] = useState(false);
+
+    return (
+    <>
+      <button
+        onClick={() => setAiShowModal(true)}
+        className="bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition"
+      >
+        SprinklAI
+      </button>
+    </>
+  );    
+}
+
+
 export default function HomePage() {
   return (
     <DrawProvider>
@@ -229,6 +246,7 @@ export default function HomePage() {
         <div className="fixed bottom-4 left-4 z-[1000] flex space-x-4">
           <DrawFarmButton />
           <GetFarmButton />
+          <AskAiButton />
         </div>
       </main>
     </DrawProvider>
