@@ -14,10 +14,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" >
       <body
         className={`${urbanist.variable} antialiased`}
-      >
+        suppressHydrationWarning>
         {children}
       </body>
     </html>
