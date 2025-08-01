@@ -50,6 +50,11 @@ const AutoDrawPolygon = () => {
 export default function Map() {
   const { center } = useDraw();
   const featureGroupRef = useRef();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleCreated = (e) => {
     const layer = e.layer;
@@ -57,6 +62,8 @@ export default function Map() {
     console.log("Polygon drawn:", latlngs);
     featureGroupRef.current?.addLayer(layer);
   };
+
+  if (!mounted) return null; 
 
   return (
     <MapContainer center={center} zoom={13} className="h-screen w-full z-0">
