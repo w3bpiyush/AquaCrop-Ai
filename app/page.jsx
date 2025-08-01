@@ -58,7 +58,7 @@ const DrawFarmButton = () => {
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1100]">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center z-[1100]">
           <div className="bg-white rounded-lg shadow-xl w-96 max-w-full p-6 mx-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-800">Set Crop Information</h2>
@@ -176,7 +176,7 @@ const GetFarmButton = () => {
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1100]">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center z-[1100]">
           <div className="bg-white rounded-lg shadow-xl w-96 max-w-full p-6 mx-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-800">Set Farm Location</h2>
@@ -256,15 +256,15 @@ const AskAiButton = () => {
 export default function HomePage() {
   return (
     <DrawProvider>
-      <main className="relative min-h-screen">
-        <Map />
-        <div className="fixed bottom-4 left-4 z-[1000] flex space-x-4">
-          <DrawFarmButton />
-          <GetFarmButton />
-          <GetWaterUsagesButton />
-          <AskAiButton />
-        </div>
-      </main>
+        <main className="relative w-full h-full">
+          <Map />
+          <div className="fixed bottom-4 left-4 z-[1000] flex space-x-4">
+            <DrawFarmButton />
+            <GetFarmButton />
+            <GetWaterUsagesButton />
+            <AskAiButton />
+          </div>
+        </main>
     </DrawProvider>
   );
 }
