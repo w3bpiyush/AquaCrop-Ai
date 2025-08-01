@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import L from "leaflet";
+import { calculatePolygonArea, calculatePolygonCenter } from "../utils/areaFunctions";
 
 const MapSetup = () => {
   const map = useMap();
@@ -13,7 +14,7 @@ const MapSetup = () => {
 
   useEffect(() => {
     setMap(map);
-  }, [map]);
+  }, [map, setMap]);
 
   return null;
 };
@@ -23,14 +24,11 @@ const MapUpdater = () => {
   const map = useMap();
 
   useEffect(() => {
-    if (map && center) {
-      map.setView(center, map.getZoom());
-    }
+    if (map && center) map.setView(center, map.getZoom());
   }, [center, map]);
 
   return null;
 };
-
 
 const AutoDrawPolygon = () => {
   const map = useMap();
@@ -40,16 +38,16 @@ const AutoDrawPolygon = () => {
     if (triggerDraw && map) {
       const polygonDrawer = new L.Draw.Polygon(map);
       polygonDrawer.enable();
-      setTriggerDraw(false); 
+      setTriggerDraw(false);
     }
-  }, [triggerDraw, map]);
+  }, [triggerDraw, map, setTriggerDraw]);
 
   return null;
 };
 
 export default function Map() {
-  const { center } = useDraw();
   const featureGroupRef = useRef();
+  const { setPolygonData } = useDraw();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -58,15 +56,23 @@ export default function Map() {
 
   const handleCreated = (e) => {
     const layer = e.layer;
-    const latlngs = layer.getLatLngs();
-    console.log("Polygon drawn:", latlngs);
+    const latlngs = layer.getLatLngs()[0]; // first ring
     featureGroupRef.current?.addLayer(layer);
+
+    // Compute area & center
+    const area = calculatePolygonArea(latlngs);
+    const center = calculatePolygonCenter(latlngs);
+
+    // Save to context
+    setPolygonData({ latlngs, area, center });
+
+    console.log("Polygon Data:", { latlngs, area, center });
   };
 
-  if (!mounted) return null; 
+  if (!mounted) return null;
 
   return (
-    <MapContainer center={center} zoom={13} className="h-screen w-full z-0">
+    <MapContainer center={[36.7783, -119.4179]} zoom={13} className="h-screen w-full z-0">
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&copy; OpenStreetMap contributors"

@@ -4,35 +4,32 @@ export function calculatePolygonArea(latLngs) {
 
   let area = 0;
   for (let i = 0; i < n; i++) {
-    const p1 = latLngs[i];
-    const p2 = latLngs[(i + 1) % n]; 
-
-    area += (p1.lng * p2.lat) - (p2.lng * p1.lat);
+    const { lat: lat1, lng: lng1 } = latLngs[i];
+    const { lat: lat2, lng: lng2 } = latLngs[(i + 1) % n];
+    area += lng1 * lat2 - lng2 * lat1;
   }
 
-  return Math.abs(area / 2);
+  return Math.abs(area / 2); 
 }
 
 export function calculatePolygonCenter(latLngs) {
   const n = latLngs.length;
-  if (n < 3) return L.latLng(0, 0);
+  if (n < 3) return { lat: 0, lng: 0 };
 
   let areaSum = 0;
   let centroidX = 0;
   let centroidY = 0;
 
   for (let i = 0; i < n; i++) {
-    const p1 = latLngs[i];
-    const p2 = latLngs[(i + 1) % n];
+    const { lat: lat1, lng: lng1 } = latLngs[i];
+    const { lat: lat2, lng: lng2 } = latLngs[(i + 1) % n];
+    const cross = lng1 * lat2 - lng2 * lat1;
 
-    const cross = (p1.lng * p2.lat) - (p2.lng * p1.lat);
     areaSum += cross;
-    centroidX += (p1.lng + p2.lng) * cross;
-    centroidY += (p1.lat + p2.lat) * cross;
+    centroidX += (lng1 + lng2) * cross;
+    centroidY += (lat1 + lat2) * cross;
   }
 
-  const area = areaSum / 2;
-  const factor = 1 / (3 * area);
-
-  return L.latLng(centroidY * factor, centroidX * factor);
+  const factor = 1 / (3 * areaSum);
+  return { lat: centroidY * factor, lng: centroidX * factor };
 }

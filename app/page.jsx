@@ -21,7 +21,6 @@ const DrawFarmButton = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const { cropType, growthStage, irrigationType, waterFlow } = inputs;
 
     if (!cropType || !growthStage || !irrigationType || !waterFlow) {
@@ -36,16 +35,11 @@ const DrawFarmButton = () => {
     }
 
     setShowModal(false);
-    setTriggerDraw(true); 
+    setTriggerDraw(true);
 
-    console.log("Crop Info:", { cropType, growthStage, irrigationType, waterFlow: flow });
+    console.log("Crop Info Submitted:", { cropType, growthStage, irrigationType, waterFlow: flow });
 
-    setInputs({
-      cropType: "",
-      growthStage: "",
-      irrigationType: "",
-      waterFlow: "",
-    });
+    setInputs({ cropType: "", growthStage: "", irrigationType: "", waterFlow: "" });
   };
 
   return (
@@ -222,10 +216,9 @@ const GetFarmButton = () => {
 };
 
 const GetWaterUsagesButton = () => {
-
   const [showWaterModel, setWaterShowModal] = useState(false);
 
-    return (
+  return (
     <>
       <button
         onClick={() => setWaterShowModal(true)}
@@ -234,14 +227,13 @@ const GetWaterUsagesButton = () => {
         Get Water Usages
       </button>
     </>
-  );    
-}
+  );
+};
 
 const AskAiButton = () => {
-
   const [showAiModal, setAiShowModal] = useState(false);
 
-    return (
+  return (
     <>
       <button
         onClick={() => setAiShowModal(true)}
@@ -250,21 +242,21 @@ const AskAiButton = () => {
         SprinklAI 🌱
       </button>
     </>
-  );    
-}
+  );
+};
 
 export default function HomePage() {
   return (
     <DrawProvider>
-        <main className="relative w-full h-full">
-          <Map />
-          <div className="fixed bottom-4 left-4 z-[1000] flex space-x-4">
-            <DrawFarmButton />
-            <GetFarmButton />
-            <GetWaterUsagesButton />
-            <AskAiButton />
-          </div>
-        </main>
+      <main className="relative w-full h-full">
+        <Map />
+        <div className="fixed bottom-4 left-4 z-[1000] flex space-x-4">
+          <DrawFarmButton />
+          <GetFarmButton />
+          <GetWaterUsagesButton />
+          <AskAiButton />
+        </div>
+      </main>
     </DrawProvider>
   );
 }
