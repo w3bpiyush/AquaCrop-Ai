@@ -1,12 +1,30 @@
 "use client";
-import { MapContainer, TileLayer, FeatureGroup, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  FeatureGroup,
+  useMap,
+} from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import { useDraw } from "../context/DrawContext";
+import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-import { useEffect } from "react";
+import L from "leaflet";
 
-const MapUpdater = ({ center }) => {
+const MapSetup = () => {
+  const map = useMap();
+  const { setMap } = useDraw();
+
+  useEffect(() => {
+    setMap(map);
+  }, [map]);
+
+  return null;
+};
+
+const MapUpdater = () => {
+  const { center } = useDraw();
   const map = useMap();
 
   useEffect(() => {
@@ -18,15 +36,32 @@ const MapUpdater = ({ center }) => {
   return null;
 };
 
+
+const AutoDrawPolygon = () => {
+  const map = useMap();
+  const { triggerDraw, setTriggerDraw } = useDraw();
+
+  useEffect(() => {
+    if (triggerDraw && map) {
+      const polygonDrawer = new L.Draw.Polygon(map);
+      polygonDrawer.enable();
+      setTriggerDraw(false); 
+    }
+  }, [triggerDraw, map]);
+
+  return null;
+};
+
 export default function Map() {
-  const { enabled, setEnabled, center } = useDraw();
+  const { center } = useDraw();
+  const featureGroupRef = useRef();
 
   const handleCreated = (e) => {
-    const latlngs = e.layer.getLatLngs();
-    console.log("Coordinates:", latlngs);
-    setEnabled(false);
+    const layer = e.layer;
+    const latlngs = layer.getLatLngs();
+    console.log("Polygon drawn:", latlngs);
+    featureGroupRef.current?.addLayer(layer);
   };
-
 
   return (
     <MapContainer center={center} zoom={13} className="h-screen w-full z-0">
@@ -34,12 +69,14 @@ export default function Map() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&copy; OpenStreetMap contributors"
       />
-      <MapUpdater center={center} />
-      <FeatureGroup>
+      <MapUpdater />
+      <MapSetup />
+      <AutoDrawPolygon />
+      <FeatureGroup ref={featureGroupRef}>
         <EditControl
           position="topright"
           draw={{
-            polygon: enabled,
+            polygon: false,
             rectangle: false,
             circle: false,
             marker: false,

@@ -1,18 +1,19 @@
 "use client";
+
 import dynamic from "next/dynamic";
-import { DrawProvider, useDraw } from "../context/DrawContext";
 import { useState } from "react";
+import { DrawProvider, useDraw } from "../context/DrawContext";
 
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
 const DrawFarmButton = () => {
-  const { setEnabled } = useDraw();
+  const { setTriggerDraw } = useDraw();
   const [showModal, setShowModal] = useState(false);
   const [inputs, setInputs] = useState({
     cropType: "",
     growthStage: "",
     irrigationType: "",
-    waterFlow: ""
+    waterFlow: "",
   });
 
   const handleChange = (e) => {
@@ -21,23 +22,31 @@ const DrawFarmButton = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    if (!inputs.cropType || !inputs.growthStage || !inputs.irrigationType || !inputs.waterFlow) {
+
+    const { cropType, growthStage, irrigationType, waterFlow } = inputs;
+
+    if (!cropType || !growthStage || !irrigationType || !waterFlow) {
       alert("Please fill in all fields.");
       return;
     }
 
-    const waterFlow = parseFloat(inputs.waterFlow);
-    if (isNaN(waterFlow) || waterFlow <= 0) {
-      alert("Please enter a valid water flow rate (gallons/minute).");
+    const flow = parseFloat(waterFlow);
+    if (isNaN(flow) || flow <= 0) {
+      alert("Enter a valid water flow rate.");
       return;
     }
 
-    setEnabled(true);
     setShowModal(false);
-    setInputs({ cropType: "", growthStage: "", irrigationType: "", waterFlow: "" });
-    
-    console.log("Crop Info:", { ...inputs, waterFlow });
+    setTriggerDraw(true); // triggers polygon draw mode on map
+
+    console.log("Crop Info:", { cropType, growthStage, irrigationType, waterFlow: flow });
+
+    setInputs({
+      cropType: "",
+      growthStage: "",
+      irrigationType: "",
+      waterFlow: "",
+    });
   };
 
   return (
@@ -50,7 +59,7 @@ const DrawFarmButton = () => {
       </button>
 
       {showModal && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center z-[1100] w-full h-full">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1100]">
           <div className="bg-white rounded-lg shadow-xl w-96 max-w-full p-6 mx-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-800">Set Crop Information</h2>
@@ -71,18 +80,13 @@ const DrawFarmButton = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               >
                 <option value="">Select Crop Type</option>
-                <option value="Rice">Rice</option>
-                <option value="Wheat">Wheat</option>
-                <option value="Maize">Maize</option>
-                <option value="Millet">Millet</option>
-                <option value="Barley">Barley</option>
-                <option value="Potato">Potato</option>
-                <option value="Lentils">Lentils</option>
-                <option value="Mustard">Mustard</option>
-                <option value="Sugarcane">Sugarcane</option>
-                <option value="Tea">Tea</option>
-                <option value="Coffee">Coffee</option>
-                <option value="Vegetables">Vegetables</option>
+                <option value="Alfalfa">Alfalfa</option>
+                <option value="Onions">Onions</option>
+                <option value="Apples">Apples</option>
+                <option value="Pasture">Pasture</option>
+                <option value="Apricots">Apricots</option>
+                <option value="Peaches">Peaches</option>
+                <option value="BeansGreen">Beans Green</option>
               </select>
 
               <select
@@ -139,7 +143,7 @@ const DrawFarmButton = () => {
 };
 
 const GetFarmButton = () => {
-  const { setCenter } = useDraw(); 
+  const { setCenter } = useDraw();
   const [showModal, setShowModal] = useState(false);
   const [inputs, setInputs] = useState({ lat: "", lng: "" });
 
@@ -149,6 +153,7 @@ const GetFarmButton = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const lat = parseFloat(inputs.lat);
     const lng = parseFloat(inputs.lng);
 
