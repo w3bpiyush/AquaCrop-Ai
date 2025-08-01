@@ -5,16 +5,136 @@ import { useState } from "react";
 
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
-const DrawButton = () => {
+const DrawFarmButton = () => {
   const { setEnabled } = useDraw();
+  const [showModal, setShowModal] = useState(false);
+  const [inputs, setInputs] = useState({
+    cropType: "",
+    growthStage: "",
+    irrigationType: "",
+    waterFlow: ""
+  });
+
+  const handleChange = (e) => {
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!inputs.cropType || !inputs.growthStage || !inputs.irrigationType || !inputs.waterFlow) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    const waterFlow = parseFloat(inputs.waterFlow);
+    if (isNaN(waterFlow) || waterFlow <= 0) {
+      alert("Please enter a valid water flow rate (gallons/minute).");
+      return;
+    }
+
+    setEnabled(true);
+    setShowModal(false);
+    setInputs({ cropType: "", growthStage: "", irrigationType: "", waterFlow: "" });
+    
+    console.log("Crop Info:", { ...inputs, waterFlow });
+  };
 
   return (
-    <button
-      onClick={() => setEnabled((prev) => !prev)}
-      className="bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition"
-    >
-      Set Crop Info
-    </button>
+    <>
+      <button
+        onClick={() => setShowModal(true)}
+        className="bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition"
+      >
+        Set Crop Info
+      </button>
+
+      {showModal && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center z-[1100] w-full h-full">
+          <div className="bg-white rounded-lg shadow-xl w-96 max-w-full p-6 mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold text-gray-800">Set Crop Information</h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl"
+              >
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <select
+                name="cropType"
+                value={inputs.cropType}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              >
+                <option value="">Select Crop Type</option>
+                <option value="Rice">Rice</option>
+                <option value="Wheat">Wheat</option>
+                <option value="Maize">Maize</option>
+                <option value="Millet">Millet</option>
+                <option value="Barley">Barley</option>
+                <option value="Potato">Potato</option>
+                <option value="Lentils">Lentils</option>
+                <option value="Mustard">Mustard</option>
+                <option value="Sugarcane">Sugarcane</option>
+                <option value="Tea">Tea</option>
+                <option value="Coffee">Coffee</option>
+                <option value="Vegetables">Vegetables</option>
+              </select>
+
+              <select
+                name="growthStage"
+                value={inputs.growthStage}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              >
+                <option value="">Select Growth Stage</option>
+                <option value="Seedling">Seedling</option>
+                <option value="Adult">Adult</option>
+                <option value="Elderly">Elderly</option>
+              </select>
+
+              <select
+                name="irrigationType"
+                value={inputs.irrigationType}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              >
+                <option value="">Select Irrigation Type</option>
+                <option value="Surface">Surface</option>
+                <option value="Sprinkler">Sprinkler</option>
+                <option value="Drip">Drip</option>
+                <option value="Subsurface">Subsurface</option>
+              </select>
+
+              <input
+                type="number"
+                name="waterFlow"
+                value={inputs.waterFlow}
+                onChange={handleChange}
+                required
+                min="0"
+                step="0.1"
+                placeholder="Water Flow (gallons/minute)"
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              />
+
+              <button
+                type="submit"
+                className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition"
+              >
+                Draw Farm Area
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -103,7 +223,7 @@ export default function HomePage() {
       <main className="relative min-h-screen">
         <Map />
         <div className="fixed bottom-4 left-4 z-[1000] flex space-x-4">
-          <DrawButton />
+          <DrawFarmButton />
           <GetFarmButton />
         </div>
       </main>
