@@ -8,8 +8,8 @@ const urbanist = Urbanist({
 });
 
 export const metadata = {
-  title: "Water Wise",
-  description: "A Next.js app for managing farm tasks with AI assistance",
+  title: "AquaCrop AI",
+  description: "AI-powered smart irrigation using NASA OpenET data for sustainable farming.",
 };
 
 export default function RootLayout({ children }) {
