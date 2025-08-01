@@ -247,12 +247,11 @@ const AskAiButton = () => {
         onClick={() => setAiShowModal(true)}
         className="bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition"
       >
-        SprinklAI
+        SprinklAI 🌱
       </button>
     </>
   );    
 }
-
 
 export default function HomePage() {
   return (
