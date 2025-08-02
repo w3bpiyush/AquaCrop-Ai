@@ -64,7 +64,7 @@ export default function Map() {
     setPolygonData({ latlngs, area, center });
   };
 
-  if (!mounted) return <div className="h-screen w-full" />;
+  if (!mounted) return null;
 
   return (
     <MapContainer center={[36.7783, -119.4179]} zoom={13} className="h-screen w-full z-0">

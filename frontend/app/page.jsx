@@ -242,6 +242,8 @@ const GetWaterUsagesButton = () => {
   const [responseData, setResponseData] = useState(null);
   const [error, setError] = useState(null);
 
+  const { setPolygonData, setCropInputs } = useDraw();
+
   const handleFetch = async () => {
     if (!polygonData || !cropInputs) {
       alert("Please fill in crop info and draw a polygon first.");
@@ -255,8 +257,8 @@ const GetWaterUsagesButton = () => {
     const body = {
       lat: center.lat,
       long: center.lng,
-      start_date: "2025-07-25",
-      end_date: "2025-07-31",
+      start_date: startDate,
+      end_date: endDate,
       coords: latlngs.map(({ lat, lng }) => ({ lat, lng })),
       cropType,
       growthStage,
@@ -281,6 +283,8 @@ const GetWaterUsagesButton = () => {
       if (!res.ok) throw new Error("Failed to fetch water usage.");
       const data = await res.json();
       setResponseData(data);
+      setPolygonData(null);
+      setCropInputs(null);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -333,7 +337,7 @@ const GetWaterUsagesButton = () => {
                 {responseData.map((entry, index) => (
                   <div
                     key={index}
-                    className="border rounded-xl px-5 py-4 shadow-md bg-gray-50 hover:bg-gray-100 transition"
+                    className="rounded-xl px-5 py-4 shadow-md bg-gray-50 hover:bg-gray-100 transition"
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <div className="p-2 bg-green-100 rounded-full">
