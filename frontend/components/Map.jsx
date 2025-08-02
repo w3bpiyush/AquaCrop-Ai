@@ -56,20 +56,15 @@ export default function Map() {
 
   const handleCreated = (e) => {
     const layer = e.layer;
-    const latlngs = layer.getLatLngs()[0]; // first ring
+    const latlngs = layer.getLatLngs()[0];
     featureGroupRef.current?.addLayer(layer);
 
-    // Compute area & center
     const area = calculatePolygonArea(latlngs);
     const center = calculatePolygonCenter(latlngs);
-
-    // Save to context
     setPolygonData({ latlngs, area, center });
-
-    console.log("Polygon Data:", { latlngs, area, center });
   };
 
-  if (!mounted) return null;
+  if (!mounted) return <div className="h-screen w-full" />;
 
   return (
     <MapContainer center={[36.7783, -119.4179]} zoom={13} className="h-screen w-full z-0">
@@ -98,3 +93,4 @@ export default function Map() {
     </MapContainer>
   );
 }
+

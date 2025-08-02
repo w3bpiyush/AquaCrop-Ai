@@ -10,6 +10,8 @@ export const DrawProvider = ({ children }) => {
   const [map, setMap] = useState(null);
   const [triggerDraw, setTriggerDraw] = useState(false);
   const [polygonData, setPolygonData] = useState(null); // { latlngs, area, center }
+  const [cropInputs, setCropInputs] = useState(null); 
+
 
   return (
     <DrawContext.Provider
@@ -22,6 +24,8 @@ export const DrawProvider = ({ children }) => {
         setTriggerDraw,
         polygonData,
         setPolygonData,
+        cropInputs,
+        setCropInputs
       }}
     >
       {children}

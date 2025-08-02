@@ -2,6 +2,8 @@
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { DrawProvider, useDraw } from "../context/DrawContext";
+import { getDateRangeLast7Days } from "../utils/areaFunctions";
+import { Droplet } from "lucide-react";
 
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
@@ -14,6 +16,8 @@ const DrawFarmButton = () => {
     irrigationType: "",
     waterFlow: "",
   });
+
+  const { setCropInputs } = useDraw();
 
   const handleChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -37,9 +41,21 @@ const DrawFarmButton = () => {
     setShowModal(false);
     setTriggerDraw(true);
 
-    console.log("Crop Info Submitted:", { cropType, growthStage, irrigationType, waterFlow: flow });
+    console.log("Crop Info Submitted:", {
+      cropType,
+      growthStage,
+      irrigationType,
+      waterFlow: flow,
+    });
 
-    setInputs({ cropType: "", growthStage: "", irrigationType: "", waterFlow: "" });
+    setCropInputs({ cropType, growthStage, irrigationType, waterFlow: flow });
+
+    setInputs({
+      cropType: "",
+      growthStage: "",
+      irrigationType: "",
+      waterFlow: "",
+    });
   };
 
   return (
@@ -55,7 +71,9 @@ const DrawFarmButton = () => {
         <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center z-[1100]">
           <div className="bg-white rounded-lg shadow-xl w-96 max-w-full p-6 mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Set Crop Information</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                Set Crop Information
+              </h2>
               <button
                 onClick={() => setShowModal(false)}
                 className="text-gray-500 hover:text-gray-700 text-xl"
@@ -173,7 +191,9 @@ const GetFarmButton = () => {
         <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center z-[1100]">
           <div className="bg-white rounded-lg shadow-xl w-96 max-w-full p-6 mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Set Farm Location</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                Set Farm Location
+              </h2>
               <button
                 onClick={() => setShowModal(false)}
                 className="text-gray-500 hover:text-gray-700 text-xl"
@@ -216,16 +236,132 @@ const GetFarmButton = () => {
 };
 
 const GetWaterUsagesButton = () => {
-  const [showWaterModel, setWaterShowModal] = useState(false);
+  const { cropInputs, polygonData } = useDraw();
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [responseData, setResponseData] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleFetch = async () => {
+    if (!polygonData || !cropInputs) {
+      alert("Please fill in crop info and draw a polygon first.");
+      return;
+    }
+
+    const { cropType, growthStage, irrigationType, waterFlow } = cropInputs;
+    const { area, center, latlngs } = polygonData;
+    const { startDate, endDate } = getDateRangeLast7Days();
+
+    const body = {
+      lat: center.lat,
+      long: center.lng,
+      start_date: "2025-07-25",
+      end_date: "2025-07-31",
+      coords: latlngs.map(({ lat, lng }) => ({ lat, lng })),
+      cropType,
+      growthStage,
+      area,
+      flowRate: parseFloat(waterFlow),
+    };
+
+    try {
+      setLoading(true);
+      setError(null);
+      setResponseData(null);
+
+      const res = await fetch(
+        "http://localhost:3001/api/water/getIrrigationPlan",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch water usage.");
+      const data = await res.json();
+      setResponseData(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openModal = () => {
+    setShowModal(true);
+    handleFetch();
+  };
 
   return (
     <>
       <button
-        onClick={() => setWaterShowModal(true)}
+        onClick={openModal}
         className="bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition"
       >
         Get Water Usages
       </button>
+
+      {showModal && (
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center z-[1100]">
+          <div className="bg-white rounded-lg shadow-xl w-[170vw] max-w-6xl p-6 mx-4 max-h-[100vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Water Usage Forecast
+              </h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl"
+              >
+                &times;
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="w-2/3 h-4 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-green-500 animate-pulse w-full"></div>
+                </div>
+                <p className="text-sm text-gray-500 mt-4">
+                  Fetching water usage data...
+                </p>
+              </div>
+            ) : error ? (
+              <div className="text-red-600 text-sm">{error}</div>
+            ) : responseData ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {responseData.map((entry, index) => (
+                  <div
+                    key={index}
+                    className="border rounded-xl px-5 py-4 shadow-md bg-gray-50 hover:bg-gray-100 transition"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-green-100 rounded-full">
+                        <Droplet className="text-green-600 w-5 h-5" />
+                      </div>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {entry.date}
+                      </p>
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      <p className="mb-1">
+                        <span className="font-medium">Water:</span>{" "}
+                        {entry.waterRequirement} L
+                      </p>
+                      <p>
+                        <span className="font-medium">End Time:</span>{" "}
+                        {entry.endtime}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">No data available.</p>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 };
