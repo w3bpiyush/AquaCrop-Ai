@@ -23,8 +23,8 @@ export function calculatePolygonArea(latLngs) {
   // Area in km²
   const areaKm2 = shoelaceArea(coordsKm);
 
-  // Convert to hectares (1 km² = 100 ha)
-  return areaKm2 * 100;
+  // Convert to m²
+  return areaKm2 * 1_000_000;
 }
 
 export function calculatePolygonCenter(latLngs) {
