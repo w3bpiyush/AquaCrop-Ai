@@ -38,21 +38,31 @@ export function calculatePolygonCenter(latLngs) {
   if (n < 3) return L.latLng(0, 0);
 
   let areaSum = 0;
-  let centroidX = 0;
-  let centroidY = 0;
+  let centroidLat = 0;
+  let centroidLng = 0;
 
   for (let i = 0; i < n; i++) {
-    const p1 = latLngs[i];
-    const p2 = latLngs[(i + 1) % n];
+    const curr = latLngs[i];
+    const next = latLngs[(i + 1) % n];
 
-    const cross = p1.lng * p2.lat - p2.lng * p1.lat;
+    // Shoelace formula cross product
+    const cross = curr.lat * next.lng - next.lat * curr.lng;
     areaSum += cross;
-    centroidX += (p1.lng + p2.lng) * cross;
-    centroidY += (p1.lat + p2.lat) * cross;
+    
+    // Accumulate weighted coordinates
+    centroidLat += (curr.lat + next.lat) * cross;
+    centroidLng += (curr.lng + next.lng) * cross;
   }
 
-  const area = areaSum / 2;
-  const factor = 1 / (3 * area);
+  // Handle degenerate cases
+  if (Math.abs(areaSum) < 1e-10) {
+    // Fallback to simple average for near-zero area
+    const avgLat = latLngs.reduce((sum, p) => sum + p.lat, 0) / n;
+    const avgLng = latLngs.reduce((sum, p) => sum + p.lng, 0) / n;
+    return L.latLng(avgLat, avgLng);
+  }
 
-  return L.latLng(centroidY * factor, centroidX * factor);
+  // Calculate centroid
+  const factor = 1 / (3 * areaSum);
+  return L.latLng(centroidLat * factor, centroidLng * factor);
 }
