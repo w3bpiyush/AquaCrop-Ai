@@ -91,12 +91,12 @@ const DrawFarmButton = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               >
                 <option value="">Select Crop Type</option>
-                <option value="alfalfa">Alfalfa</option>
-                <option value="onions">Onions</option>
-                <option value="apples">Apples</option>
-                <option value="pasture">Pasture</option>
-                <option value="apricots">Apricots</option>
-                <option value="peaches">Peaches</option>
+                <option value="wheat">Wheat</option>
+                <option value="barley">Barley</option>
+                <option value="maize">Maize</option>
+                <option value="millet">Millet</option>
+                <option value="sorghum">Sorghum</option>
+                <option value="rice">Rice</option>
                 <option value="beansgreen">Beans Green</option>
               </select>
 

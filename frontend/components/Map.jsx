@@ -47,11 +47,15 @@ const AutoDrawPolygon = () => {
 
 export default function Map() {
   const featureGroupRef = useRef();
-  const { setPolygonData } = useDraw();
+  const { setPolygonData, map } = useDraw();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+     setMounted(true);
+    
+    if (map) {
+      map.remove();
+    }
   }, []);
 
   const handleCreated = (e) => {

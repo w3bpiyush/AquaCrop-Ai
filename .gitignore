@@ -6,6 +6,7 @@ backend/.env
 .next
 /.pnp
 .pnp.*
+credits.txt
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
