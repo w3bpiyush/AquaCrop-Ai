@@ -122,4 +122,3 @@ Pull requests are welcome! For major changes, open an issue first to discuss wha
 ## 👨‍💻 Maintainer
 
 **Piyush Manna**  
-[GitHub](https://github.com/w3bpiyush)
