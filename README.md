@@ -23,8 +23,6 @@ Below is a sample evapotranspiration (ET) visualization used in AquaCrop:
 
 ![ET Data Visualization](https://github.com/user-attachments/assets/36a0a2b6-d9b6-4b6a-ae73-528abca807bc)
 
-> ☝️ *ET (Evapotranspiration) refers to the total water lost through soil evaporation and plant transpiration.*
-
 ---
 
 ## 📖 Key Terms Explained
@@ -82,12 +80,6 @@ Below is a sample evapotranspiration (ET) visualization used in AquaCrop:
 git clone https://github.com/yourusername/AquaCrop.git
 cd AquaCrop
 npm install
-```
-
-Set your environment variables:
-
-```env
-OPENET_APIKEY=your_openet_api_key
 ```
 
 Then run the server:
