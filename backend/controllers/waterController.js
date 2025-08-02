@@ -1,3 +1,5 @@
+const cropTable = "../constant/croptable";
+
 const getPrecipitation = async (req, res) => {
   try {
     const { lat, long, start_date, end_date } = req.query;
@@ -97,5 +99,13 @@ const getETData = async (req, res) => {
     return res.status(500).json({ error: "Failed to fetch ET data" });
   }
 };
+
+const getWaterRequirement = (req, res) => {
+   try {
+      
+   } catch (error) {
+      return res.status(500).json({ error: "Failed to calculate water requirement" });
+   }
+}  
 
 module.exports = { getPrecipitation, getETData };
