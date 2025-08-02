@@ -2,6 +2,7 @@
 package-lock.json
 # dependencies
 frontend/node_modules
+backend/.env
 .next
 /.pnp
 .pnp.*
