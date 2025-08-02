@@ -68,15 +68,14 @@ export function calculatePolygonCenter(latLngs) {
 }
 
 export function getDateRangeLast7Days() {
-    const endDate = new Date(); 
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 6); 
+  const startDate = new Date(); // today
+  const endDate = new Date();
+  endDate.setDate(startDate.getDate() + 6); // 6 days after today
 
-    // Format as YYYY-MM-DD
-    const formatDate = (date) => date.toISOString().split('T')[0];
+  const formatDate = (date) => date.toISOString().split("T")[0];
 
-    return {
-        startDate: formatDate(startDate),
-        endDate: formatDate(endDate)
-    };
+  return {
+    startDate: formatDate(startDate),
+    endDate: formatDate(endDate),
+  };
 }
