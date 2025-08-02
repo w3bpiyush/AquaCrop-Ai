@@ -66,3 +66,17 @@ export function calculatePolygonCenter(latLngs) {
   const factor = 1 / (3 * areaSum);
   return L.latLng(centroidLat * factor, centroidLng * factor);
 }
+
+export function getDateRangeLast7Days() {
+    const endDate = new Date(); 
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 6); 
+
+    // Format as YYYY-MM-DD
+    const formatDate = (date) => date.toISOString().split('T')[0];
+
+    return {
+        startDate: formatDate(startDate),
+        endDate: formatDate(endDate)
+    };
+}
