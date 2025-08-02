@@ -1,10 +1,10 @@
-export const GrowthStage = [
+const GrowthStage = [
     'Seedling',
     'Adult',
     'Elderly'
-]
+];
 
-export const CropType = [
+const CropType = [
     'alfalfa',
     'onions',
     'apples',
@@ -44,7 +44,7 @@ export const CropType = [
 
 
 
-export const cropData = {
+const cropData = {
     'alfalfa': { 'Seedling': 0.4, 'Adult': 1.2, 'Elderly': 1.15 },
     'onions': { 'Seedling': 0.7, 'Adult': 1.05, 'Elderly': 0.95 },
     'apples': { 'Seedling': 0.5, 'Adult': 1.2, 'Elderly': 0.85 },
@@ -82,3 +82,4 @@ export const cropData = {
     'lettuce': { 'Seedling': 0.7, 'Adult': 1, 'Elderly': 0.95 }
 };
 
+module.exports = { GrowthStage, CropType, cropData };

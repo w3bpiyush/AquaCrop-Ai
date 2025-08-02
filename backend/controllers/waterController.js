@@ -100,12 +100,41 @@ const getETData = async (req, res) => {
   }
 };
 
-const getWaterRequirement = (req, res) => {
-   try {
-      
-   } catch (error) {
-      return res.status(500).json({ error: "Failed to calculate water requirement" });
-   }
-}  
+const { cropData } = require("../constant/croptable");
 
-module.exports = { getPrecipitation, getETData };
+const getWaterRequirement = (req, res) => {
+  try {
+    const { cropType, ET, growthStage, area, precipitation } = req.body;
+
+    if (!cropType || !growthStage || !area || !ET || !precipitation) {
+      return res.status(400).json({ error: "Missing required fields in request body" });
+    }
+
+    if (!cropData[cropType] || !cropData[cropType][growthStage]) {
+      return res.status(400).json({ error: "Invalid cropType or growthStage" });
+    }
+
+    if (ET.length !== 7 || precipitation.length !== 7) {
+      return res.status(400).json({ error: "ET and precipitation must be arrays of 7 values" });
+    }
+
+    const kc = cropData[cropType][growthStage];
+    const waterRequirement = [];
+
+    for (let i = 0; i < 7; i++) {
+      const dailyEt = ET[i];
+      const dailyPrecip = precipitation[i];
+      const dailyRequirement = Math.ceil((dailyEt * kc - dailyPrecip) * area);
+      waterRequirement.push({ day: i + 1, dailyRequirement: Math.max(dailyRequirement, 0) }); // avoid negatives
+    }
+
+    return res.json({ waterRequirement });
+
+  } catch (error) {
+    console.error("Error calculating water requirement:", error.message);
+    return res.status(500).json({ error: "Failed to calculate water requirement" });
+  }
+};
+
+
+module.exports = { getPrecipitation, getETData, getWaterRequirement };
