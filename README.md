@@ -52,7 +52,7 @@ Below is a sample evapotranspiration (ET) visualization used in AquaCrop:
 
 2. **Data Sources**
    - Rainfall Forecast: [Open-Meteo API](https://open-meteo.com)
-   - ET Data: [NASA OpenET API](https://openetdata.org)
+   - ET Data: [NASA OpenET API](https://openetdata.org) & [Open-Meteo API](https://open-meteo.com)
    - Crop Coefficients: Based on FAO data, stored locally
 
 3. **Computation**
