@@ -21,9 +21,7 @@
 
 Below is a sample evapotranspiration (ET) data visualization used in AquaCrop:
 
-<img src="https://www.nasa.gov/wp-content/uploads/2021/08/et_animation_v3_1042px_opt1.gif?w=1042" alt="ET Data Visualization" width="600"/>
-
-
+![ET Data Visualization](https://github.com/user-attachments/assets/36a0a2b6-d9b6-4b6a-ae73-528abca807bc)
 
 > ☝️ *ET (Evapotranspiration) refers to the total water lost through soil evaporation and plant transpiration.*
 
