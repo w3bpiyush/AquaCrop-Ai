@@ -17,9 +17,9 @@
 
 ---
 
-## 📷 Screenshot of ET Data Visualization
+## 📷 Screenshot of ET Visualization
 
-Below is a sample evapotranspiration (ET) data visualization used in AquaCrop:
+Below is a sample evapotranspiration (ET) visualization used in AquaCrop:
 
 ![ET Data Visualization](https://github.com/user-attachments/assets/36a0a2b6-d9b6-4b6a-ae73-528abca807bc)
 
