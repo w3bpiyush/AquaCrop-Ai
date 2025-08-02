@@ -2,29 +2,35 @@ export function calculatePolygonArea(latLngs) {
   const n = latLngs.length;
   if (n < 3) return 0;
 
-  // Shoelace formula helper
-  const shoelaceArea = (coords) => {
-    let area = 0;
-    for (let i = 0; i < coords.length; i++) {
-      const [x1, y1] = coords[i];
-      const [x2, y2] = coords[(i + 1) % coords.length];
-      area += x1 * y2 - x2 * y1;
-    }
-    return Math.abs(area / 2);
-  };
+  const toRadians = (degrees) => degrees * (Math.PI / 180);
 
-  // Convert lat/lng to km for accurate area calculation
-  const avgLat = latLngs.reduce((sum, p) => sum + p.lat, 0) / n;
-  const kmPerDegLat = 111; // ~111 km per degree latitude
-  const kmPerDegLng = 111 * Math.cos((avgLat * Math.PI) / 180);
-
-  const coordsKm = latLngs.map((p) => [p.lat * kmPerDegLat, p.lng * kmPerDegLng]);
-
-  // Area in km²
-  const areaKm2 = shoelaceArea(coordsKm);
-
-  // Convert to m²
-  return areaKm2 * 1_000_000;
+  let area = 0;
+  
+  // Apply Shoelace formula directly on spherical coordinates
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n; // Next vertex index, wrapping around
+    
+    // Convert to radians
+    const lat1 = toRadians(latLngs[i].lat);
+    const lat2 = toRadians(latLngs[j].lat);
+    const lng1 = toRadians(latLngs[i].lng);
+    const lng2 = toRadians(latLngs[j].lng);
+    
+    // Shoelace formula on spherical surface
+    area += lng1 * lat2 - lng2 * lat1;
+  }
+  
+  area = Math.abs(area) / 2;
+  
+  // Convert from steradians to square meters
+  // Earth's radius in meters (WGS84 mean radius)
+  const earthRadius = 6378137;
+  const conversionFactor = Math.PI / 180; // degrees to radians
+  
+  // Convert area from degrees² to m²
+  area = area * (earthRadius ** 2) * (conversionFactor ** 2);
+  
+  return area;
 }
 
 export function calculatePolygonCenter(latLngs) {
