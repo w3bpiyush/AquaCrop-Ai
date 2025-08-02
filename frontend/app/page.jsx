@@ -250,13 +250,70 @@ const GetWaterUsagesButton = () => {
 
 const AskAiButton = () => {
   const modal = useModal();
+  const [input, setInput] = useState("");
+  const [userMessage, setUserMessage] = useState("");
+  const [aiResponse, setAiResponse] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!input.trim()) {
+      alert("Please enter a question.");
+      return;
+    }
+
+    console.log("User asked SprinklAI:", input);
+
+    setUserMessage(input);
+    setAiResponse("This is a mock AI response. Replace with real logic.");
+    setInput("");
+  };
+
   return (
     <>
       <button onClick={modal.open} className="btn-primary">SprinklAI 🌱</button>
-      {/* Future AI modal here */}
+
+      {modal.isVisible && (
+        <Modal title="Ask SprinklAI 🌱" onClose={modal.close} scroll>
+           <div className="mt-6 space-y-4">
+            {userMessage && (
+              <div className="flex justify-end">
+                <div className="bg-green-100 text-gray-800 px-4 py-2 rounded-xl max-w-xs">
+                  <p className="text-sm font-medium">You</p>
+                  <p>{userMessage}</p>
+                </div>
+              </div>
+            )}
+
+            {aiResponse && (
+              <div className="flex justify-start mb-4">
+                <div className="bg-gray-100 text-gray-800 px-4 py-2 rounded-xl max-w-xs">
+                  <p className="text-sm font-medium">SprinklAI 🌱</p>
+                  <p>{aiResponse}</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your question..."
+              className="input"
+              required
+            />
+            <button type="submit" className="btn-primary w-full">Submit</button>
+          </form>
+
+         
+        </Modal>
+      )}
     </>
   );
 };
+
 
 // Modal, Select, Input and Button styles
 const Modal = ({ title, onClose, children, wide, scroll }) => (
